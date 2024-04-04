@@ -1,6 +1,6 @@
-import { BlockStatusFilter } from './blockchain/types.js';
+import { BlockStatusFilter } from './blockchain/types';
 import { GraphQLResolveInfo } from 'graphql';
-import { GraphQLContext } from './context.js';
+import { GraphQLContext } from './context';
 export type Maybe<T> = T | null;
 export type InputMaybe<T> = Maybe<T>;
 export type Exact<T extends { [key: string]: unknown }> = {
@@ -48,8 +48,10 @@ export type ActionFilterOptionsInput = {
   endActionState?: InputMaybe<Scalars['String']['input']>;
   from?: InputMaybe<Scalars['Int']['input']>;
   fromActionState?: InputMaybe<Scalars['String']['input']>;
+  fromTimestamp?: InputMaybe<Scalars['String']['input']>;
   status?: InputMaybe<BlockStatusFilter>;
   to?: InputMaybe<Scalars['Int']['input']>;
+  toTimestamp?: InputMaybe<Scalars['String']['input']>;
   tokenId?: InputMaybe<Scalars['String']['input']>;
 };
 
@@ -94,8 +96,10 @@ export type EventData = {
 export type EventFilterOptionsInput = {
   address: Scalars['String']['input'];
   from?: InputMaybe<Scalars['Int']['input']>;
+  fromTimestamp?: InputMaybe<Scalars['String']['input']>;
   status?: InputMaybe<BlockStatusFilter>;
   to?: InputMaybe<Scalars['Int']['input']>;
+  toTimestamp?: InputMaybe<Scalars['String']['input']>;
   tokenId?: InputMaybe<Scalars['String']['input']>;
 };
 

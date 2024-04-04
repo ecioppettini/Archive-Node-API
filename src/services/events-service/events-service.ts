@@ -61,7 +61,7 @@ class EventsService implements IEventsService {
   }
 
   private async executeEventsQuery(input: EventFilterOptionsInput) {
-    const { address, to, from } = input;
+    const { address, to, from, toTimestamp, fromTimestamp } = input;
     let { tokenId, status } = input;
 
     tokenId ||= DEFAULT_TOKEN_ID;
@@ -76,7 +76,9 @@ class EventsService implements IEventsService {
       tokenId,
       status,
       to?.toString(),
-      from?.toString()
+      from?.toString(),
+      toTimestamp?.toString(),
+      fromTimestamp?.toString()
     );
   }
 

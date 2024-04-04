@@ -65,7 +65,9 @@ function blocksAccessedCTE(
   db_client: postgres.Sql,
   status: BlockStatusFilter,
   to?: string,
-  from?: string
+  from?: string,
+  toTimestamp?: string,
+  fromTimestamp?: string
 ) {
   return db_client`
   blocks_accessed AS
@@ -99,6 +101,8 @@ function blocksAccessedCTE(
     }
     ${to ? db_client`AND b.height <= ${to}` : db_client``}
     ${from ? db_client`AND b.height >= ${from}` : db_client``}
+    ${fromTimestamp ? db_client`AND b.timestamp >= ${fromTimestamp}` : db_client``}
+    ${toTimestamp ? db_client`AND b.timestamp <= ${toTimestamp}` : db_client``}
   )`;
 }
 
@@ -207,13 +211,15 @@ export function getEventsQuery(
   tokenId: string,
   status: BlockStatusFilter,
   to?: string,
-  from?: string
+  from?: string,
+  toTimestamp?: string,
+  fromTimestamp?: string,
 ) {
   return db_client<ArchiveNodeDatabaseRow[]>`
   WITH 
   ${fullChainCTE(db_client)},
   ${accountIdentifierCTE(db_client, address, tokenId)},
-  ${blocksAccessedCTE(db_client, status, to, from)},
+  ${blocksAccessedCTE(db_client, status, to, from, toTimestamp, fromTimestamp)},
   ${emittedZkAppCommandsCTE(db_client)},
   ${emittedEventsCTE(db_client)}
   SELECT *
@@ -229,13 +235,15 @@ export function getActionsQuery(
   to?: string,
   from?: string,
   fromActionState?: string,
-  endActionState?: string
+  endActionState?: string,
+  toTimestamp?: string,
+  fromTimestamp?: string
 ) {
   return db_client<ArchiveNodeDatabaseRow[]>`
   WITH 
   ${fullChainCTE(db_client)},
   ${accountIdentifierCTE(db_client, address, tokenId)},
-  ${blocksAccessedCTE(db_client, status, to, from)},
+  ${blocksAccessedCTE(db_client, status, to, from, toTimestamp, fromTimestamp)},
   ${emittedZkAppCommandsCTE(db_client)},
   ${emittedActionsCTE(db_client)},
   ${emittedActionStateCTE(db_client, fromActionState, endActionState)}

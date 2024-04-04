@@ -10,6 +10,8 @@ input EventFilterOptionsInput {
   status: BlockStatusFilter
   to: Int
   from: Int
+  toTimestamp: String
+  fromTimestamp: String
 }
 
 input ActionFilterOptionsInput {
@@ -20,6 +22,8 @@ input ActionFilterOptionsInput {
   from: Int
   fromActionState: String
   endActionState: String
+  toTimestamp: String
+  fromTimestamp: String
 }
 
 type EventData {
