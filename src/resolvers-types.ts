@@ -45,10 +45,12 @@ export type ActionData = {
 
 export type ActionFilterOptionsInput = {
   address: Scalars['String']['input'];
+  after?: InputMaybe<Scalars['String']['input']>;
   endActionState?: InputMaybe<Scalars['String']['input']>;
   from?: InputMaybe<Scalars['Int']['input']>;
   fromActionState?: InputMaybe<Scalars['String']['input']>;
   fromTimestamp?: InputMaybe<Scalars['String']['input']>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
   status?: InputMaybe<BlockStatusFilter>;
   to?: InputMaybe<Scalars['Int']['input']>;
   toTimestamp?: InputMaybe<Scalars['String']['input']>;
@@ -95,8 +97,10 @@ export type EventData = {
 
 export type EventFilterOptionsInput = {
   address: Scalars['String']['input'];
+  after?: InputMaybe<Scalars['String']['input']>;
   from?: InputMaybe<Scalars['Int']['input']>;
   fromTimestamp?: InputMaybe<Scalars['String']['input']>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
   status?: InputMaybe<BlockStatusFilter>;
   to?: InputMaybe<Scalars['Int']['input']>;
   toTimestamp?: InputMaybe<Scalars['String']['input']>;

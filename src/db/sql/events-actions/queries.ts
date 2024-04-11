@@ -67,7 +67,7 @@ function blocksAccessedCTE(
   to?: string,
   from?: string,
   toTimestamp?: string,
-  fromTimestamp?: string
+  fromTimestamp?: string,
 ) {
   return db_client`
   blocks_accessed AS
@@ -103,10 +103,11 @@ function blocksAccessedCTE(
     ${from ? db_client`AND b.height >= ${from}` : db_client``}
     ${fromTimestamp ? db_client`AND b.timestamp >= ${fromTimestamp}` : db_client``}
     ${toTimestamp ? db_client`AND b.timestamp <= ${toTimestamp}` : db_client``}
+    ORDER BY block_id
   )`;
 }
 
-function emittedZkAppCommandsCTE(db_client: postgres.Sql) {
+function emittedZkAppCommandsCTE(db_client: postgres.Sql, after?: string) {
   return db_client`
   emitted_zkapp_commands AS (
     SELECT
@@ -128,6 +129,7 @@ function emittedZkAppCommandsCTE(db_client: postgres.Sql) {
       INNER JOIN zkapp_account_update zkcu ON zkcu.id = ANY(zkc.zkapp_account_updates_ids)
       INNER JOIN zkapp_account_update_body zkcu_body ON zkcu_body.id = zkcu.body_id
       AND zkcu_body.account_identifier_id = requesting_zkapp_account_identifier_id
+      ${after ? db_client`AND zkc.id > (SELECT id FROM zkapp_commands WHERE zkapp_commands.hash = ${after})` : db_client``}
     WHERE 
       bzkc.status <> 'failed'
   )`;
@@ -214,20 +216,22 @@ export function getEventsQuery(
   from?: string,
   toTimestamp?: string,
   fromTimestamp?: string,
+  after?: string,
+  limit?: string,
 ) {
   return db_client<ArchiveNodeDatabaseRow[]>`
   WITH 
   ${fullChainCTE(db_client)},
   ${accountIdentifierCTE(db_client, address, tokenId)},
   ${blocksAccessedCTE(db_client, status, to, from, toTimestamp, fromTimestamp)},
-  ${emittedZkAppCommandsCTE(db_client)},
+  ${emittedZkAppCommandsCTE(db_client, after)},
   ${emittedEventsCTE(db_client)}
   SELECT *
   FROM emitted_events
   `;
 }
 
-export function getActionsQuery(
+export async function getActionsQuery(
   db_client: postgres.Sql,
   address: string,
   tokenId: string,
@@ -237,14 +241,16 @@ export function getActionsQuery(
   fromActionState?: string,
   endActionState?: string,
   toTimestamp?: string,
-  fromTimestamp?: string
+  fromTimestamp?: string,
+  after?: string,
+  limit?: string,
 ) {
   return db_client<ArchiveNodeDatabaseRow[]>`
   WITH 
   ${fullChainCTE(db_client)},
   ${accountIdentifierCTE(db_client, address, tokenId)},
   ${blocksAccessedCTE(db_client, status, to, from, toTimestamp, fromTimestamp)},
-  ${emittedZkAppCommandsCTE(db_client)},
+  ${emittedZkAppCommandsCTE(db_client, after)},
   ${emittedActionsCTE(db_client)},
   ${emittedActionStateCTE(db_client, fromActionState, endActionState)}
   SELECT *

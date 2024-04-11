@@ -62,7 +62,7 @@ class ActionsService implements IActionsService {
   }
 
   async executeActionsQuery(input: ActionFilterOptionsInput) {
-    const { address, to, from, endActionState, fromActionState, toTimestamp, fromTimestamp } = input;
+    const { address, to, from, endActionState, fromActionState, toTimestamp, fromTimestamp, after, limit } = input;
     let { tokenId, status } = input;
 
     tokenId ||= DEFAULT_TOKEN_ID;
@@ -81,7 +81,9 @@ class ActionsService implements IActionsService {
       fromActionState?.toString(),
       endActionState?.toString(),
       toTimestamp?.toString(),
-      fromTimestamp?.toString()
+      fromTimestamp?.toString(),
+      after?.toString(),
+      limit?.toString()
     );
   }
 

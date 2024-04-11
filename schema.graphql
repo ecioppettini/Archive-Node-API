@@ -12,6 +12,8 @@ input EventFilterOptionsInput {
   from: Int
   toTimestamp: String
   fromTimestamp: String
+  after: String
+  limit: Int
 }
 
 input ActionFilterOptionsInput {
@@ -24,6 +26,8 @@ input ActionFilterOptionsInput {
   endActionState: String
   toTimestamp: String
   fromTimestamp: String
+  after: String
+  limit: Int
 }
 
 type EventData {
